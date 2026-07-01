@@ -1,3 +1,6 @@
+#############################################################################
+Git command cheatsheet created by Sameer 
+#############################################################################
 GIT-CHEAT-SHEET(1)             Git Manual Suite             GIT-CHEAT-SHEET(1)
 
 NAME
