@@ -1,0 +1,94 @@
+Git Fetch vs Git Pull (Interview + Practical Notes)
+Git Fetch	Git Pull
+Downloads the latest changes from the remote repository.	Downloads the latest changes and merges them into your current branch.
+Does not modify your working files.	Updates your working files after merging.
+Safe to use before reviewing changes.	Directly updates your local branch.
+Used when you want to inspect changes before merging.	Used when you want to immediately synchronize your branch.
+1. git fetch
+What it does
+
+Downloads the latest commits, branches, and tags from the remote repository but does not merge them into your current branch.
+
+Command
+git fetch origin
+Industry Use Case
+
+You start your work in the morning and want to see what your teammates have pushed.
+
+git fetch origin
+
+Now you can review the changes before deciding whether to merge them.
+
+Best when:
+
+Reviewing team changes
+Checking updates safely
+Avoiding unexpected merge conflicts
+2. git pull
+What it does
+
+Downloads the latest changes from the remote repository and immediately merges them into your current branch.
+
+Command
+git pull origin main
+
+Internally, Git performs:
+
+git fetch
+git merge
+Industry Use Case
+
+Before starting development, you want your local main branch to match the latest code on the remote repository.
+
+git checkout main
+git pull origin main
+
+Now your local branch is up to date and ready for development.
+
+Best when:
+
+You trust the remote changes
+You want the latest code immediately
+Starting work or before creating a new feature branch
+Visual Example
+Before
+Remote (origin/main)
+
+A ---- B ---- C ---- D
+
+Local (main)
+
+A ---- B ---- C
+After git fetch
+Remote (origin/main)
+
+A ---- B ---- C ---- D
+
+Local (main)
+
+A ---- B ---- C
+
+(Your local branch is unchanged, but Git knows about commit D.)
+After git pull
+Remote (origin/main)
+
+A ---- B ---- C ---- D
+
+Local (main)
+
+A ---- B ---- C ---- D
+
+Your local branch and working files are updated.
+
+Interview Answer (30 Seconds)
+
+Q: What is the difference between git fetch and git pull?
+
+Answer:
+
+git fetch downloads the latest changes from the remote repository without changing my local branch or working files. It allows me to review updates before merging. git pull performs a fetch followed by a merge, updating my current branch and working directory with the latest remote changes.
+
+Quick Revision
+Command	Purpose	Changes Local Files?	Typical Use
+git fetch	Download remote updates only	❌ No	Review changes before merging
+git pull	Download and merge updates	✅ Yes	Synchronize local branch with remote
