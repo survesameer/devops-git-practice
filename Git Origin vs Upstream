@@ -1,0 +1,132 @@
+# Git Origin vs Upstream (Interview + Practical Notes)
+
+| **Origin**                                                    | **Upstream**                                                             |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Refers to **your own remote repository** (usually on GitHub). | Refers to the **original repository** from which you forked the project. |
+| Created automatically when you clone a repository.            | Added manually after forking a repository.                               |
+| Used to push your own changes.                                | Used to fetch updates from the original project.                         |
+
+---
+
+## 1. What is `origin`?
+
+`origin` is the **default name** Git gives to the remote repository when you clone a project.
+
+### Example
+
+```bash
+git clone https://github.com/sameer/demo.git
+```
+
+Git automatically creates:
+
+```text
+origin → https://github.com/sameer/demo.git
+```
+
+### Industry Use Case
+
+You developed a new feature and want to upload your code to your GitHub repository.
+
+```bash
+git push origin feature-login
+```
+
+---
+
+## 2. What is `upstream`?
+
+`upstream` is the **original repository** from which you forked a project.
+
+It is commonly used in **open-source development**.
+
+### Example
+
+Original repository:
+
+```text
+https://github.com/kubernetes/kubernetes
+```
+
+Your fork:
+
+```text
+https://github.com/sameer/kubernetes
+```
+
+Remote configuration:
+
+```text
+origin   → Your fork
+upstream → Original Kubernetes repository
+```
+
+---
+
+## Industry Use Case
+
+Suppose you fork an open-source project.
+
+You:
+
+1. Fork the repository.
+2. Clone **your fork**.
+3. Add the original repository as **upstream**.
+4. Regularly fetch updates from **upstream**.
+5. Push your work to **origin**.
+6. Create a Pull Request to contribute changes back to the original project.
+
+Commands:
+
+```bash
+git remote add upstream https://github.com/original/project.git
+git fetch upstream
+git merge upstream/main
+git push origin main
+```
+
+---
+
+# Visual Diagram
+
+```text
+                Original Repository
+                     (upstream)
+                          ▲
+                     git fetch
+                          │
+                          │
+Your Local Repository ─────────► Your GitHub Repository
+                                (origin)
+                                     ▲
+                                git push
+```
+
+---
+
+# Interview Answer (30 Seconds)
+
+**Q: What is the difference between `origin` and `upstream`?**
+
+**Answer:**
+
+> `origin` is the default remote that points to my own repository where I push my changes. `upstream` points to the original repository that I forked from, allowing me to fetch the latest updates and keep my fork synchronized.
+
+---
+
+# Quick Revision
+
+| Term       | Purpose                     | Common Command         |
+| ---------- | --------------------------- | ---------------------- |
+| `origin`   | Your remote repository      | `git push origin main` |
+| `upstream` | Original project repository | `git fetch upstream`   |
+
+---
+
+## Key Points
+
+* `origin` = **My GitHub repository**
+* `upstream` = **Original project repository**
+* Push your code to **origin**
+* Fetch new changes from **upstream**
+* Most common in **fork-based open-source workflows**; in many company projects, only `origin` is used because everyone collaborates on the same central repository.
