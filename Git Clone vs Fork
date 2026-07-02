@@ -1,0 +1,204 @@
+# Git Clone vs Fork (Interview + Practical Notes)
+
+## Practical Exercise
+
+### 1. Clone a Public Repository
+
+Example:
+
+```bash
+git clone https://github.com/octocat/Hello-World.git
+cd Hello-World
+```
+
+This creates a local copy of the repository on your machine.
+
+---
+
+### 2. Fork the Same Repository
+
+**Steps:**
+
+1. Open the repository on GitHub.
+2. Click the **Fork** button.
+3. GitHub creates a copy under your GitHub account.
+4. Clone your fork:
+
+```bash
+git clone https://github.com/<your-username>/Hello-World.git
+cd Hello-World
+```
+
+---
+
+# 1. What is the difference between Clone and Fork?
+
+| **Clone**                                                      | **Fork**                                                                  |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Creates a local copy of a repository on your computer.         | Creates a copy of a repository in your GitHub account.                    |
+| Performed using Git.                                           | Performed on GitHub.                                                      |
+| Used for local development.                                    | Used when you don't have write access or want your own copy of a project. |
+| Creates the `origin` remote pointing to the cloned repository. | Creates your own GitHub repository, which you then clone locally.         |
+
+---
+
+# 2. When would you Clone vs Fork?
+
+## Use **Clone** when:
+
+* Working on your company's repository.
+* You have write access.
+* Collaborating with your team.
+* Building new features or fixing bugs in a shared repository.
+
+### Industry Example
+
+Your organization has:
+
+```
+github.com/company/banking-app
+```
+
+You have access, so simply:
+
+```bash
+git clone https://github.com/company/banking-app.git
+```
+
+---
+
+## Use **Fork** when:
+
+* Contributing to an open-source project.
+* You don't have write access.
+* You want your own copy of the repository.
+
+### Industry Example
+
+You want to contribute to the Kubernetes project.
+
+Steps:
+
+1. Fork the repository.
+2. Clone your fork.
+3. Make changes.
+4. Push to your fork.
+5. Create a Pull Request to the original repository.
+
+---
+
+# 3. After forking, how do you keep your fork in sync with the original repository?
+
+## Step 1: Add the original repository as `upstream`
+
+```bash
+git remote add upstream https://github.com/original-owner/project.git
+```
+
+Check remotes:
+
+```bash
+git remote -v
+```
+
+Example output:
+
+```text
+origin    https://github.com/yourname/project.git
+upstream  https://github.com/original-owner/project.git
+```
+
+---
+
+## Step 2: Fetch the latest changes
+
+```bash
+git fetch upstream
+```
+
+This downloads updates from the original repository without changing your local branch.
+
+---
+
+## Step 3: Merge the changes
+
+```bash
+git checkout main
+git merge upstream/main
+```
+
+Alternatively, if your team uses rebase:
+
+```bash
+git rebase upstream/main
+```
+
+---
+
+## Step 4: Push the updated branch to your fork
+
+```bash
+git push origin main
+```
+
+Now your fork on GitHub is synchronized with the original repository.
+
+---
+
+# Visual Workflow
+
+```text
+                 Original Repository
+                      (upstream)
+                           ▲
+                      git fetch
+                           │
+                           │
+Your Local Repository ───────────► Your GitHub Fork
+                                  (origin)
+                                       ▲
+                                  git push
+```
+
+---
+
+# Interview Answer (30 Seconds)
+
+### Q: What is the difference between clone and fork?
+
+**Answer:**
+
+> A **clone** creates a local copy of a repository on my computer for development. A **fork** creates a copy of a repository in my own GitHub account, typically used when I don't have write access or when contributing to open-source projects.
+
+### Q: When would you clone vs fork?
+
+**Answer:**
+
+> I use **clone** when I have write access to a repository, such as in my company's projects. I use **fork** when contributing to external or open-source projects where I need my own GitHub copy before submitting a Pull Request.
+
+### Q: After forking, how do you keep your fork in sync?
+
+**Answer:**
+
+> I add the original repository as the `upstream` remote, fetch the latest changes, merge (or rebase) them into my local branch, and then push the updated branch to my `origin` (my fork).
+
+---
+
+# Quick Revision
+
+| Task               | Command                              |
+| ------------------ | ------------------------------------ |
+| Clone a repository | `git clone <repo-url>`               |
+| Add upstream       | `git remote add upstream <repo-url>` |
+| View remotes       | `git remote -v`                      |
+| Fetch updates      | `git fetch upstream`                 |
+| Merge updates      | `git merge upstream/main`            |
+| Push to your fork  | `git push origin main`               |
+
+### Key Takeaway
+
+* **Clone** = Copy a repository to your local machine.
+* **Fork** = Copy a repository to your GitHub account.
+* **origin** = Your repository.
+* **upstream** = The original repository.
+* Keep your fork updated by **fetching from `upstream`** and **pushing to `origin`**.
