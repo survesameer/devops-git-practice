@@ -1,0 +1,420 @@
+# Git Merge, Rebase, Stash & Cherry-Pick (Interview + Practical Notes)
+
+---
+
+# 1. What is Merge?
+
+A **merge** combines changes from one branch into another.
+
+It preserves the history of both branches.
+
+### Example
+
+```text
+main
+A ---- B
+
+feature
+      \
+       C ---- D
+```
+
+After merge:
+
+```text
+A ---- B -------- M
+      \          /
+       C ---- D
+```
+
+`M` = Merge Commit
+
+### Use Case
+
+Merge a completed feature branch into `main` after code review and testing.
+
+---
+
+# 2. What is Git Merge?
+
+`git merge` is the Git command used to combine one branch into another.
+
+### Command
+
+```bash
+git checkout main
+git merge feature-login
+```
+
+### Industry Use Case
+
+Developer finishes the **Login Feature**.
+
+After testing and approval:
+
+```bash
+git checkout main
+git merge feature-login
+```
+
+The login feature becomes part of the production code.
+
+---
+
+# 3. What is Git Rebase?
+
+**Rebase** moves your branch on top of another branch, creating a **linear commit history**.
+
+Instead of creating a merge commit, Git replays your commits on top of the latest branch.
+
+### Before Rebase
+
+```text
+A ---- B ---- C (main)
+      \
+       D ---- E (feature)
+```
+
+### After Rebase
+
+```text
+A ---- B ---- C ---- D ---- E
+```
+
+No merge commit is created.
+
+### Command
+
+```bash
+git checkout feature
+git rebase main
+```
+
+### Industry Use Case
+
+Before creating a Pull Request, developers often rebase their feature branch with the latest `main` to reduce merge conflicts and keep history clean.
+
+---
+
+# Merge vs Rebase
+
+| Git Merge                     | Git Rebase                                        |
+| ----------------------------- | ------------------------------------------------- |
+| Creates a merge commit        | No merge commit                                   |
+| Preserves complete history    | Creates a clean, linear history                   |
+| Easier for team collaboration | Better for keeping history clean                  |
+| Safe for shared branches      | Avoid rebasing commits already shared with others |
+
+---
+
+# 4. Squash Commit vs Merge Commit
+
+## Merge Commit
+
+Keeps **all individual commits**.
+
+Example:
+
+```text
+Feature Branch
+
+Added Login
+Fixed Login
+Updated UI
+```
+
+After merge:
+
+```text
+Added Login
+Fixed Login
+Updated UI
+Merge Feature
+```
+
+History remains detailed.
+
+---
+
+## Squash Commit
+
+Combines multiple commits into **one single commit**.
+
+Example:
+
+```text
+Added Login
+Fixed Login
+Updated UI
+```
+
+Becomes
+
+```text
+Added Login Feature
+```
+
+### Command
+
+```bash
+git merge --squash feature
+```
+
+### Industry Use Case
+
+A feature branch contains 20 small commits.
+
+Instead of cluttering `main`, squash them into one meaningful commit.
+
+---
+
+# Merge Commit vs Squash Commit
+
+| Merge Commit                | Squash Commit                 |
+| --------------------------- | ----------------------------- |
+| Keeps all commits           | Combines commits into one     |
+| Full history                | Cleaner history               |
+| Easier to trace development | Easier to read commit history |
+
+---
+
+# 5. What is Git Stash?
+
+Git **Stash** temporarily saves your uncommitted changes without creating a commit.
+
+Useful when you need to switch branches quickly.
+
+### Save Changes
+
+```bash
+git stash
+```
+
+### View Stashes
+
+```bash
+git stash list
+```
+
+### Restore Latest Stash
+
+```bash
+git stash apply
+```
+
+### Restore and Remove
+
+```bash
+git stash pop
+```
+
+### Delete a Stash
+
+```bash
+git stash drop
+```
+
+### Industry Use Case
+
+You're halfway through a feature when a production issue arises.
+
+Instead of committing incomplete work:
+
+```bash
+git stash
+git checkout main
+```
+
+Fix the production issue, then return:
+
+```bash
+git checkout feature
+git stash pop
+```
+
+---
+
+# 6. What is Cherry-pick?
+
+`git cherry-pick` copies **one or more specific commits** from one branch to another.
+
+It does **not** merge the entire branch.
+
+### Command
+
+```bash
+git cherry-pick <commit-id>
+```
+
+Example:
+
+```bash
+git cherry-pick a1b2c3d
+```
+
+---
+
+# 7. What does Cherry-pick do?
+
+Cherry-pick applies a selected commit to your current branch.
+
+Example:
+
+```text
+main
+
+A ---- B
+
+feature
+
+A ---- B ---- C ---- D
+```
+
+Cherry-pick commit **D**
+
+Result
+
+```text
+main
+
+A ---- B ---- D'
+```
+
+Only commit **D** is copied.
+
+---
+
+# 8. When would you use Cherry-pick?
+
+### Industry Example 1
+
+A critical production bug was fixed in the **develop** branch.
+
+You need only that bug fix in **main**.
+
+Instead of merging the entire branch:
+
+```bash
+git cherry-pick <bug-fix-commit>
+```
+
+---
+
+### Industry Example 2
+
+One useful feature commit is ready, but the rest of the feature branch is still incomplete.
+
+Cherry-pick only the required commit.
+
+---
+
+# 9. What can go wrong with Cherry-picking?
+
+### 1. Merge Conflicts
+
+If the same code changed differently in both branches, conflicts may occur.
+
+---
+
+### 2. Duplicate Commits
+
+Cherry-picking creates a **new commit** with a different commit ID.
+
+This can duplicate changes if the original commit is later merged.
+
+---
+
+### 3. Missing Dependencies
+
+The selected commit may depend on earlier commits.
+
+Cherry-picking only one commit can cause build or runtime issues.
+
+---
+
+### 4. Complex History
+
+Excessive cherry-picking makes commit history harder to understand.
+
+---
+
+# Interview Answers (30 Seconds)
+
+### Q: What is Git Merge?
+
+**Answer:**
+
+> Git Merge combines changes from one branch into another while preserving the history of both branches. It often creates a merge commit when both branches have diverged.
+
+---
+
+### Q: What is Git Rebase?
+
+**Answer:**
+
+> Git Rebase moves a branch to the latest base by replaying its commits on top of another branch, creating a cleaner and more linear commit history.
+
+---
+
+### Q: Squash Commit vs Merge Commit?
+
+**Answer:**
+
+> A merge commit preserves all individual commits and branch history. A squash commit combines multiple commits into a single commit, resulting in a cleaner commit history.
+
+---
+
+### Q: What is Git Stash?
+
+**Answer:**
+
+> Git Stash temporarily saves uncommitted changes so you can switch branches or work on another task without losing your current work.
+
+---
+
+### Q: What does Cherry-pick do?
+
+**Answer:**
+
+> Cherry-pick copies a specific commit from one branch and applies it to another branch without merging the entire branch.
+
+---
+
+### Q: When would you use Cherry-pick?
+
+**Answer:**
+
+> I use cherry-pick when I need to move a specific bug fix or feature commit to another branch without bringing in all other changes.
+
+---
+
+### Q: What can go wrong with Cherry-picking?
+
+**Answer:**
+
+> Cherry-picking can cause merge conflicts, duplicate commits, missing dependencies if related commits aren't included, and a more complex project history if overused.
+
+---
+
+# Quick Revision
+
+| Command                       | Purpose                                      |
+| ----------------------------- | -------------------------------------------- |
+| `git merge feature`           | Merge a branch into the current branch       |
+| `git rebase main`             | Replay commits on top of `main`              |
+| `git merge --squash feature`  | Combine all feature commits into one         |
+| `git stash`                   | Save uncommitted changes temporarily         |
+| `git stash list`              | View saved stashes                           |
+| `git stash apply`             | Restore a stash (keep it)                    |
+| `git stash pop`               | Restore and remove a stash                   |
+| `git cherry-pick <commit-id>` | Copy a specific commit to the current branch |
+
+## Key Takeaways
+
+* **Merge** preserves branch history and may create a merge commit.
+* **Rebase** creates a clean, linear history by replaying commits.
+* **Squash** combines multiple commits into one before merging.
+* **Stash** is ideal for temporarily saving unfinished work.
+* **Cherry-pick** copies only the commits you need, making it useful for selective bug fixes and urgent changes.
+:wq!
+
