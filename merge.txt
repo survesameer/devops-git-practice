@@ -269,3 +269,4 @@ The merge is now complete.
 * **Merge commit** = Preserves the history of parallel development.
 * **Merge conflict** = Happens when Git cannot decide which change to keep; resolve it manually before completing the merge.
 
+-- Sameer Surve
