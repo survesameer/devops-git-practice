@@ -1,0 +1,216 @@
+# Git Log Commands (Interview + Daily Practice Notes)
+
+`git log` is used to **view the commit history** of a Git repository.
+
+---
+
+## 1. View All Commits
+
+```bash
+git log
+```
+
+**Use Case:**
+View the complete commit history with commit ID, author, date, and message.
+
+---
+
+## 2. One-Line Commit History
+
+```bash
+git log --oneline
+```
+
+**Use Case:**
+Quickly review commit history. Most commonly used by DevOps engineers.
+
+**Example Output**
+
+```text
+f3a2b1c Added login feature
+a8c7d9e Fixed payment bug
+b5d6e7f Initial commit
+```
+
+---
+
+## 3. Compact Graph View
+
+```bash
+git log --oneline --graph
+```
+
+**Use Case:**
+Visualize branches and merge history.
+
+---
+
+## 4. Graph with All Branches
+
+```bash
+git log --oneline --graph --all
+```
+
+**Use Case:**
+View commits across all local branches.
+
+---
+
+## 5. Show Last 5 Commits
+
+```bash
+git log -5
+```
+
+or
+
+```bash
+git log --oneline -5
+```
+
+**Use Case:**
+Review only the most recent commits.
+
+---
+
+## 6. View Commits by a Specific Author
+
+```bash
+git log --author="Sameer"
+```
+
+**Use Case:**
+See commits made by a particular developer.
+
+---
+
+## 7. Search Commit Messages
+
+```bash
+git log --grep="login"
+```
+
+**Use Case:**
+Find commits containing a specific keyword.
+
+---
+
+## 8. View Changes in Each Commit
+
+```bash
+git log -p
+```
+
+**Use Case:**
+See exactly what code changed in each commit.
+
+---
+
+## 9. View Statistics
+
+```bash
+git log --stat
+```
+
+**Use Case:**
+Shows modified files and the number of lines added or removed.
+
+---
+
+## 10. Show One Specific Commit
+
+```bash
+git show <commit-id>
+```
+
+**Example**
+
+```bash
+git show f3a2b1c
+```
+
+**Use Case:**
+Inspect a particular commit in detail.
+
+---
+
+## 11. Pretty Format
+
+```bash
+git log --pretty=oneline
+```
+
+**Use Case:**
+Display each commit on a single line.
+
+---
+
+## 12. Log for a Specific File
+
+```bash
+git log README.md
+```
+
+**Use Case:**
+See the history of changes for one file.
+
+---
+
+## 13. View Branch Decorations
+
+```bash
+git log --oneline --decorate
+```
+
+**Use Case:**
+Displays branch names, tags, and `HEAD` along with commits.
+
+---
+
+## 14. Beautiful Daily Command (Most Used)
+
+```bash
+git log --oneline --graph --decorate --all
+```
+
+**Use Case:**
+Provides a concise, visual overview of all branches, commits, tags, and merge history.
+
+---
+
+# Interview Question
+
+### Q: What is `git log` used for?
+
+**Answer:**
+
+> `git log` displays the commit history of a Git repository. It helps developers review changes, track authors, inspect commits, and understand the project's history.
+
+---
+
+# Quick Revision
+
+| Command                                      | Purpose                             |
+| -------------------------------------------- | ----------------------------------- |
+| `git log`                                    | Full commit history                 |
+| `git log --oneline`                          | Short commit history                |
+| `git log --graph`                            | Visual branch graph                 |
+| `git log --all`                              | Show all branches                   |
+| `git log -5`                                 | Last 5 commits                      |
+| `git log --author="Name"`                    | Filter by author                    |
+| `git log --grep="text"`                      | Search commit messages              |
+| `git log -p`                                 | Show code changes                   |
+| `git log --stat`                             | Show file statistics                |
+| `git show <commit-id>`                       | Inspect a specific commit           |
+| `git log README.md`                          | History of a specific file          |
+| `git log --decorate`                         | Show branches, tags, and `HEAD`     |
+| `git log --oneline --graph --decorate --all` | Complete visual history (daily use) |
+
+### Industry Tip
+
+The command below is one of the most commonly used by DevOps engineers because it gives a quick, visual view of the repository's history:
+
+```bash
+git log --oneline --graph --decorate --all
+```
+
