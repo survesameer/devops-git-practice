@@ -1,0 +1,603 @@
+# Git Reset vs Git Revert & Branching Strategies
+
+### DevOps / DevSecOps Interview Notes (Industry Perspective)
+
+---
+
+# 1. Git Reset
+
+## What is Git Reset?
+
+`git reset` is used to **move the current branch pointer (HEAD) to another commit**. It can also modify the **staging area (Index)** and **working directory** depending on the reset option used.
+
+It is mainly used when you want to:
+
+* Undo local commits
+* Remove commits before pushing
+* Unstage files
+* Clean local history
+
+> **Important:** Reset rewrites Git history. Avoid using it on commits that are already pushed to a shared repository.
+
+---
+
+## Git Reset Types
+
+```
+Soft Reset
+↓
+Mixed Reset (Default)
+↓
+Hard Reset
+```
+
+---
+
+# A. Soft Reset
+
+### Command
+
+```bash
+git reset --soft HEAD~1
+```
+
+### What happens?
+
+✔ Removes last commit
+
+✔ Keeps all changes staged
+
+✔ Files remain unchanged
+
+### Example
+
+Before
+
+```
+Commit C
+Commit B
+Commit A
+```
+
+Run
+
+```bash
+git reset --soft HEAD~1
+```
+
+After
+
+```
+Commit B
+Commit A
+```
+
+Changes from Commit C remain in staging.
+
+---
+
+### Industry Use Case
+
+Developer committed with wrong commit message.
+
+Instead of creating another commit:
+
+```
+Reset Soft
+Edit commit message
+Commit again
+```
+
+---
+
+# B. Mixed Reset (Default)
+
+### Command
+
+```bash
+git reset HEAD~1
+```
+
+or
+
+```bash
+git reset --mixed HEAD~1
+```
+
+### What happens?
+
+✔ Removes last commit
+
+✔ Removes staging
+
+✔ Keeps files
+
+Changes become unstaged.
+
+---
+
+### Example
+
+Before
+
+```
+Commit C
+Commit B
+Commit A
+```
+
+After
+
+```
+Commit B
+Commit A
+```
+
+Files remain in working directory.
+
+---
+
+### Industry Use Case
+
+You committed too early.
+
+Need to modify files before recommitting.
+
+---
+
+# C. Hard Reset
+
+### Command
+
+```bash
+git reset --hard HEAD~1
+```
+
+### What happens?
+
+✔ Removes commit
+
+✔ Removes staging
+
+✔ Deletes working directory changes
+
+Everything is lost.
+
+---
+
+### Industry Use Case
+
+Local experiment failed.
+
+Need to discard everything.
+
+---
+
+# Reset Comparison
+
+| Feature            | Soft | Mixed  | Hard      |
+| ------------------ | ---- | ------ | --------- |
+| Remove Commit      | Yes  | Yes    | Yes       |
+| Keep Staging       | Yes  | No     | No        |
+| Keep Working Files | Yes  | Yes    | No        |
+| Safe               | Yes  | Medium | Dangerous |
+
+---
+
+# Unstage Files
+
+Instead of removing commit:
+
+```bash
+git reset file.txt
+```
+
+or
+
+```bash
+git reset
+```
+
+Removes files from staging only.
+
+---
+
+# 2. Git Revert
+
+## What is Git Revert?
+
+`git revert` **creates a new commit that reverses the changes introduced by an earlier commit**. It does **not rewrite Git history**, making it the safest option for shared branches.
+
+Unlike Reset:
+
+```
+Reset
+↓
+
+Deletes commit
+
+Revert
+↓
+
+Adds another commit that cancels previous changes
+```
+
+---
+
+### Command
+
+```bash
+git revert <commit-id>
+```
+
+Example
+
+```bash
+git revert a7f89d
+```
+
+Git creates:
+
+```
+Commit A
+Commit B
+Commit C
+Commit D (Undo Commit C)
+```
+
+---
+
+## Why Revert?
+
+Because other developers may already have pulled the commit.
+
+Deleting history could break everyone's repository.
+
+---
+
+## Industry Use Case
+
+Developer pushes bug into production.
+
+Instead of force pushing:
+
+```
+git revert bad_commit
+git push
+```
+
+History remains clean.
+
+---
+
+# Reset vs Revert
+
+| Feature            | Reset         | Revert            |
+| ------------------ | ------------- | ----------------- |
+| Removes Commit     | Yes           | No                |
+| Creates New Commit | No            | Yes               |
+| Rewrites History   | Yes           | No                |
+| Safe After Push    | No            | Yes               |
+| Best For           | Local commits | Shared repository |
+
+---
+
+## Interview Question
+
+### Q: Which should be used after pushing code?
+
+**Answer:**
+
+Always prefer **Git Revert** because it preserves commit history and avoids disrupting other developers.
+
+---
+
+# 3. Git Branching Strategies
+
+Large organizations rarely develop directly on the `main` branch. Branching strategies help teams collaborate, isolate work, and release software safely.
+
+---
+
+# A. Feature Branch Workflow
+
+## Structure
+
+```
+main
+ │
+ ├── feature/login
+ ├── feature/payment
+ ├── feature/profile
+```
+
+Each feature has its own branch.
+
+---
+
+### Workflow
+
+```
+Create Branch
+
+↓
+
+Develop
+
+↓
+
+Commit
+
+↓
+
+Push
+
+↓
+
+Pull Request
+
+↓
+
+Code Review
+
+↓
+
+Merge into main
+```
+
+---
+
+### Commands
+
+Create feature
+
+```bash
+git checkout -b feature/login
+```
+
+Push
+
+```bash
+git push origin feature/login
+```
+
+Merge
+
+```bash
+git checkout main
+git merge feature/login
+```
+
+---
+
+### Industry Use Case
+
+Every Jira story gets its own feature branch.
+
+Example
+
+```
+feature/SEC-102
+feature/DEV-45
+feature/UI-12
+```
+
+---
+
+# B. GitFlow
+
+Used in enterprise projects with planned release cycles.
+
+## Structure
+
+```
+main
+
+develop
+
+feature/*
+
+release/*
+
+hotfix/*
+```
+
+---
+
+### Branch Purpose
+
+| Branch  | Purpose                    |
+| ------- | -------------------------- |
+| main    | Production code            |
+| develop | Integration branch         |
+| feature | New feature development    |
+| release | Release preparation        |
+| hotfix  | Emergency production fixes |
+
+---
+
+### Workflow
+
+```
+main
+   │
+develop
+   │
+feature
+   │
+release
+   │
+main
+```
+
+---
+
+### Industry Use Case
+
+Banking
+
+Telecom
+
+Healthcare
+
+Government
+
+Long-term maintenance products
+
+---
+
+# C. GitHub Flow
+
+Simpler workflow used by cloud-native and agile teams.
+
+## Structure
+
+```
+main
+
+feature branches
+
+Pull Request
+
+Merge
+
+Deploy
+```
+
+---
+
+### Workflow
+
+```
+Create Branch
+
+↓
+
+Commit
+
+↓
+
+Push
+
+↓
+
+PR
+
+↓
+
+Review
+
+↓
+
+Merge
+
+↓
+
+Deploy
+```
+
+---
+
+### Used By
+
+* SaaS companies
+* Startups
+* CI/CD environments
+* Continuous Deployment teams
+
+---
+
+# D. Trunk-Based Development
+
+Everyone works on a single main branch (or very short-lived branches).
+
+```
+main
+
+small commits
+
+multiple merges every day
+```
+
+---
+
+### Key Characteristics
+
+* Small, frequent commits
+* Continuous Integration
+* Frequent deployments
+* Feature flags for incomplete work
+
+---
+
+### Used By
+
+* Google
+* Netflix
+* Facebook (Meta)
+* High-speed DevOps teams
+
+---
+
+# Branching Strategy Comparison
+
+| Strategy                | Best For              | Complexity | Release Frequency |
+| ----------------------- | --------------------- | ---------- | ----------------- |
+| Feature Branch          | Small to medium teams | Low        | Regular           |
+| GitHub Flow             | Agile & CI/CD         | Low        | Continuous        |
+| GitFlow                 | Enterprise releases   | High       | Scheduled         |
+| Trunk-Based Development | Mature DevOps teams   | Medium     | Continuous        |
+
+---
+
+# Best Practices
+
+* Never commit directly to `main` in team projects.
+* Keep feature branches short-lived.
+* Pull the latest changes before starting new work.
+* Rebase or merge regularly to reduce conflicts.
+* Delete merged branches to keep the repository clean.
+* Use descriptive branch names (e.g., `feature/login-api`, `bugfix/session-timeout`).
+* Protect the `main` branch with pull requests and code reviews.
+* Avoid `git reset --hard` on shared branches.
+* Use `git revert` for undoing changes already pushed to remote repositories.
+
+---
+
+# Interview Questions
+
+### Q1. What is the difference between Git Reset and Git Revert?
+
+**Answer:** `git reset` rewrites history by moving the branch pointer and is mainly for local commits, while `git revert` creates a new commit that undoes previous changes without rewriting history, making it safe for shared repositories.
+
+---
+
+### Q2. When should you use `git reset --hard`?
+
+**Answer:** Only when you are certain you want to permanently discard local commits and uncommitted changes that are not needed.
+
+---
+
+### Q3. Which branching strategy is commonly used in DevOps with CI/CD?
+
+**Answer:** GitHub Flow and Trunk-Based Development are widely used because they support frequent integration, automated testing, and continuous deployment.
+
+---
+
+### Q4. Why are feature branches important?
+
+**Answer:** They isolate development work, reduce conflicts, enable code reviews through pull requests, and prevent unstable code from reaching the main branch.
+
+---
+
+## Quick Revision
+
+| Topic                   | Key Point                                                  |
+| ----------------------- | ---------------------------------------------------------- |
+| `git reset --soft`      | Undo commit, keep changes staged                           |
+| `git reset --mixed`     | Undo commit, keep changes unstaged                         |
+| `git reset --hard`      | Remove commit and delete all local changes                 |
+| `git revert`            | Safely undo changes by creating a new commit               |
+| Feature Branch          | One branch per feature or user story                       |
+| GitFlow                 | `main`, `develop`, `feature`, `release`, `hotfix` branches |
+| GitHub Flow             | Simple workflow with feature branches and pull requests    |
+| Trunk-Based Development | Frequent merges to `main` with short-lived branches        |
